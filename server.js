@@ -3,6 +3,8 @@ const express = require('express');// you
 
 const app = express(); // need
 
+const fs = require('fs');
+
 const answerKey =
 [
     first = '',
@@ -18,6 +20,20 @@ const answerKey =
     Of = 'Of',
     Sky = 'Sky'
 ];
+
+app.engine('answer', (filePath, options, callback) =>
+{
+    fs.readFile(filePath, (err, content) => {
+        if (err) return callback(err);
+        // view engine
+        const rendered = 'Hello';
+        // string stuff woooo
+        return callback(null, rendered);
+    });
+});
+
+app.set('views', './views');
+app.set('view engine', 'answer');
 
 // port listener
 app.listen(3000, function() {
