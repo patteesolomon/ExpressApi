@@ -24,9 +24,15 @@ const answerKey =
 app.engine('answer', (filePath, options, callback) =>
 {
     fs.readFile(filePath, (err, content) => {
-        if (err) return callback(err);
+        if (err)
+        {
+            return callback(err);
+        }
         // view engine
-        const rendered = 'Hello';
+        const rendered = content.toString()
+        .replace('#message#', '<header>' + options.message + '</header>')
+        .replace('#content#', '<body>' + options.content + '</body>')
+        .replace('#message#', '<footer>' + options.content);
         // string stuff woooo
         return callback(null, rendered);
     });
@@ -34,6 +40,7 @@ app.engine('answer', (filePath, options, callback) =>
 
 app.set('views', './views');
 app.set('view engine', 'answer');
+// loop through the array above the way through the template....
 
 // port listener
 app.listen(3000, function() {
@@ -49,12 +56,12 @@ app.get('/', function(req, res)
 
 app.get('/Look', function(req, res){
     var e = 'Next lesson? How many people does it take to make a baby?';
-    res.send(`${e} slash then number and dash`);
+    res.render('tem', {message:`${e} smash the number and dash`, content: answerKey[2]});
 });
 
 app.get('/2', function(req, res){
     var e = 'How many Irregular Hunters are there? 1 man 2 or more?';
-    res.send(`${e} < /type a number`);
+    res.render('tem', {message: `${e} < /type a number`, content: answerKey[3]});
 });
 
 app.get('/3', function(req, res){
@@ -79,7 +86,7 @@ app.use('/6', function(req, res){
 
 app.use('/7', function(req, res){
     var e = 'Are you a simpleton or a genius? What is the most commonly used article in grammar?';
-    res.send(`${e}`);
+    res.render('tem2',{message: `${e}`});
 });
 
 app.use('/The', function(req, res){
@@ -93,7 +100,7 @@ app.use('/Gate', function(req, res){
 });
 
 app.get('/Of', function(req, res){
-    res.send(`Cannot GET /`);
+    res.send(`Cannot GET / Object: Soul?`);
 });
 
 app.get('/Sky', function(req, res){
